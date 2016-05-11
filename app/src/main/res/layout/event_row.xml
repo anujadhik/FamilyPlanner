@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:background="#FFFF"
+    android:elevation="5dp"
+
+   >
+    <ImageView
+        android:id="@+id/textIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:paddingRight="8dp"
+        android:src="@drawable/ic_event" />
+
+
+    <TextView
+        android:id="@+id/tview_event_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="4dp"
+        android:layout_toRightOf="@+id/textIcon"
+        android:layout_toEndOf="@+id/textIcon"
+        android:singleLine="true"
+        android:text="Susan Birthday"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tview_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="mom@fm.com"
+        android:layout_below="@+id/tview_event_name"
+        android:layout_toRightOf="@+id/textView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 May 2015"
+        android:id="@+id/tview_date"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20:00"
+        android:id="@+id/tview_time"
+        android:layout_below="@+id/tview_date"
+        android:layout_alignLeft="@+id/tview_date"
+        android:layout_alignStart="@+id/tview_date" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vanha maantie 6 02210 Espoo"
+        android:id="@+id/tview_place"
+        android:layout_below="@+id/tview_time"
+        android:layout_alignLeft="@+id/tview_time"
+        android:layout_alignStart="@+id/tview_time" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Created by "
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/tview_owner"
+        android:layout_alignLeft="@+id/tview_event_name"
+        android:layout_alignStart="@+id/tview_event_name"
+        android:paddingBottom="5dp"
+        />
+
+</RelativeLayout>
