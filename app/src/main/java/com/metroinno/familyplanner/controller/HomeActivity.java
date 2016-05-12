@@ -26,6 +26,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.estimote.sdk.Beacon;
+import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Region;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -37,6 +40,7 @@ import com.metroinno.familyplanner.R;
 import com.metroinno.familyplanner.model.User;
 import com.metroinno.familyplanner.utils.Constants;
 
+<<<<<<< HEAD
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
@@ -45,13 +49,24 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         BeaconManager.MonitoringListener{
+=======
+import java.util.List;
+
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+                                                                                     BeaconManager.MonitoringListener {
+>>>>>>> origin/master
 
     private Firebase mRef,mUserRef;
     private ValueEventListener mUserRefListener;
     private TextView txtUname;
     TextView txtEmail;
     String uname;
+<<<<<<< HEAD
     private Firebase mUserTrackerRef;
+=======
+    BeaconManager beaconManager;
+    Region region;
+>>>>>>> origin/master
     private static final String TAG = "MyActivity";
 
     SharedPreferences pref;
@@ -61,6 +76,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ////stuff for beacon
+        beaconManager = new BeaconManager(getApplicationContext());
+        region = new Region("rid", null, 1808, null);
+        beaconManager.setMonitoringListener(this);
+        ////
         setSupportActionBar(toolbar);
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle("Home");
@@ -239,6 +259,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+<<<<<<< HEAD
     @Override
     public void onEnteredRegion(Region region, List<Beacon> list) {
 
@@ -250,6 +271,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+=======
+
+
+>>>>>>> origin/master
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -300,7 +325,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return null;
         }
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Should be invoked in #onStart.
+        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+            @Override
+            public void onServiceReady() {
+                // Beacons ranging.
+                beaconManager.startMonitoring(region);
+                Log.d("testbeacon", "Start Monitoring");
+            }
+        });
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -311,5 +348,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         mUserRef.removeEventListener(mUserRefListener);
+        beaconManager.disconnect();
+    }
+
+    //Methods for the beacon handling
+    @Override
+    public void onEnteredRegion(Region region, List<Beacon> list) {
+        Log.d("testbeacon", "Reginon was entered");
+    }
+
+    @Override
+    public void onExitedRegion(Region region) {
+        Log.d("testbeacon", "Reginon was left");
     }
 }
