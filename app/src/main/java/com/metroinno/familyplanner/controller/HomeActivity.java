@@ -40,8 +40,6 @@ import com.metroinno.familyplanner.R;
 import com.metroinno.familyplanner.model.User;
 import com.metroinno.familyplanner.utils.Constants;
 
-import java.util.List;
-
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
