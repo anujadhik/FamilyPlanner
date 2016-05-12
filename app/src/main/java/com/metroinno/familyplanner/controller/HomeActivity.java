@@ -40,33 +40,22 @@ import com.metroinno.familyplanner.R;
 import com.metroinno.familyplanner.model.User;
 import com.metroinno.familyplanner.utils.Constants;
 
-<<<<<<< HEAD
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Region;
-
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        BeaconManager.MonitoringListener{
-=======
-import java.util.List;
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-                                                                                     BeaconManager.MonitoringListener {
->>>>>>> origin/master
 
-    private Firebase mRef,mUserRef;
+    private Firebase mRef, mUserRef;
     private ValueEventListener mUserRefListener;
     private TextView txtUname;
     TextView txtEmail;
     String uname;
-<<<<<<< HEAD
+
     private Firebase mUserTrackerRef;
-=======
+
     BeaconManager beaconManager;
     Region region;
->>>>>>> origin/master
+
     private static final String TAG = "MyActivity";
 
     SharedPreferences pref;
@@ -76,10 +65,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ////stuff for beacon
-        beaconManager = new BeaconManager(getApplicationContext());
-        region = new Region("rid", null, 1808, null);
-        beaconManager.setMonitoringListener(this);
+
         ////
         setSupportActionBar(toolbar);
         assert getSupportActionBar() != null;
@@ -138,22 +124,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        View navHeaderView= navigationView.inflateHeaderView(R.layout.nav_header_base);
+        View navHeaderView = navigationView.inflateHeaderView(R.layout.nav_header_base);
 
         //Set login user name and email in Nav header
 
         txtUname = (TextView) navHeaderView.findViewById(R.id.txt_uname);
         txtEmail = (TextView) navHeaderView.findViewById(R.id.txt_uemail);
         mRef = new Firebase(Constants.FIREBASE_URL);
-        mUserTrackerRef= new Firebase(Constants.FIREBASE_URL_USER_TRACKER);
-        mUserRef= new Firebase(Constants.FIREBASE_URL_USERS).child(mRef.getAuth().getUid());
+        mUserTrackerRef = new Firebase(Constants.FIREBASE_URL_USER_TRACKER);
+        mUserRef = new Firebase(Constants.FIREBASE_URL_USERS).child(mRef.getAuth().getUid());
 
-        mUserRefListener= mUserRef.addValueEventListener(new ValueEventListener() {
+        mUserRefListener = mUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if(user != null){
-                    uname= user.getName();
+                if (user != null) {
+                    uname = user.getName();
                     txtUname.setText(uname);
 
                     pref = getSharedPreferences(Constants.MY_PREFS_NAME, 0);
@@ -244,13 +230,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, ChatActivity.class);
             startActivity(intent);
         }
-         if(id== R.id.logout){
-             mRef.unauth();
-             Intent intent = new Intent(this, LoginActivity.class);
-             startActivity(intent);
-             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-             finish();
-         }
+        if (id == R.id.logout) {
+            mRef.unauth();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            finish();
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -259,22 +245,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-<<<<<<< HEAD
-    @Override
-    public void onEnteredRegion(Region region, List<Beacon> list) {
-
-
-    }
-
-    @Override
-    public void onExitedRegion(Region region) {
-
-    }
-
-=======
-
-
->>>>>>> origin/master
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -325,23 +295,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return null;
         }
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        // Should be invoked in #onStart.
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                // Beacons ranging.
-                beaconManager.startMonitoring(region);
-                Log.d("testbeacon", "Start Monitoring");
-            }
-        });
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i(TAG,"hi");
+        Log.i(TAG, "hi");
     }
 
     @Override
@@ -350,15 +308,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         mUserRef.removeEventListener(mUserRefListener);
         beaconManager.disconnect();
     }
-
-    //Methods for the beacon handling
-    @Override
-    public void onEnteredRegion(Region region, List<Beacon> list) {
-        Log.d("testbeacon", "Reginon was entered");
-    }
-
-    @Override
-    public void onExitedRegion(Region region) {
-        Log.d("testbeacon", "Reginon was left");
-    }
 }
+
+
