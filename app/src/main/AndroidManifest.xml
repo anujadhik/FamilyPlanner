@@ -60,7 +60,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.UserNameListActivity"
+        <activity
+            android:name=".controller.UserNameListActivity"
+            android:parentActivityName=".controller.HomeActivity" />
+        <activity android:name=".controller.Tracker"
+            android:label="Tracker"
             android:parentActivityName=".controller.HomeActivity"></activity>
     </application>
 

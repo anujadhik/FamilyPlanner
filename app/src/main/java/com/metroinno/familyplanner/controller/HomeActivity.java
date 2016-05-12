@@ -37,13 +37,21 @@ import com.metroinno.familyplanner.R;
 import com.metroinno.familyplanner.model.User;
 import com.metroinno.familyplanner.utils.Constants;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import com.estimote.sdk.Beacon;
+import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Region;
+
+import java.util.List;
+
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        BeaconManager.MonitoringListener{
 
     private Firebase mRef,mUserRef;
     private ValueEventListener mUserRefListener;
     private TextView txtUname;
     TextView txtEmail;
     String uname;
+    private Firebase mUserTrackerRef;
     private static final String TAG = "MyActivity";
 
     SharedPreferences pref;
@@ -117,6 +125,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         txtUname = (TextView) navHeaderView.findViewById(R.id.txt_uname);
         txtEmail = (TextView) navHeaderView.findViewById(R.id.txt_uemail);
         mRef = new Firebase(Constants.FIREBASE_URL);
+        mUserTrackerRef= new Firebase(Constants.FIREBASE_URL_USER_TRACKER);
         mUserRef= new Firebase(Constants.FIREBASE_URL_USERS).child(mRef.getAuth().getUid());
 
         mUserRefListener= mUserRef.addValueEventListener(new ValueEventListener() {
@@ -207,10 +216,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, UserNameListActivity.class);
             startActivity(intent);
         }
-        /*if (id == R.id.nav_event) {
-            Intent intent = new Intent(this, LoginActivity.class);
+        if (id == R.id.nav_tracker) {
+            Intent intent = new Intent(this, Tracker.class);
             startActivity(intent);
-        }*/
+        }
         if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, ChatActivity.class);
             startActivity(intent);
@@ -228,6 +237,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    @Override
+    public void onEnteredRegion(Region region, List<Beacon> list) {
+
+
+    }
+
+    @Override
+    public void onExitedRegion(Region region) {
+
     }
 
     /**
@@ -273,12 +293,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Tasks";
+                    return "Lists";
                 case 1:
                     return "Events";
             }
             return null;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG,"hi");
     }
 
     @Override

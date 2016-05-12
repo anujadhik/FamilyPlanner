@@ -10,6 +10,7 @@ public class Constants {
     public static final String FIREBASE_URL_EVENTS = FIREBASE_URL + "/events";
     public static final String FIREBASE_URL_TASKS = FIREBASE_URL + "/todos";
     public static final String FIREBASE_URL_CHAT = FIREBASE_URL + "/chat";
+    public static final String FIREBASE_URL_USER_TRACKER = FIREBASE_URL + "/tracker";
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 }

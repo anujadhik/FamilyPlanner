@@ -1,6 +1,9 @@
 package com.metroinno.familyplanner.controller;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -30,7 +35,7 @@ import java.util.Map;
 
 public class CreateTodoActivity extends AppCompatActivity {
 
-    EditText txtTodoTitle;
+    EditText txtTodoTitle, txtTodoDetails;
     FloatingActionButton fab;
     private Firebase mRef, mListRef;
     private TodoList mTodoList;
@@ -48,36 +53,39 @@ public class CreateTodoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(0);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
         pref = getSharedPreferences(Constants.MY_PREFS_NAME, 0);
 
         userName = pref.getString("name", null);//"No name defined" is the default value.
 
         txtTodoTitle = (EditText) findViewById(R.id.txt_todo_title);
+        txtTodoDetails=(EditText) findViewById(R.id.txt_todo_details);
 
         mRef = new Firebase(Constants.FIREBASE_URL_TASKS);
-
-
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.hide();
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialog = AddTodoItem.newInstance();
-                dialog.show(CreateTodoActivity.this.getFragmentManager(), "AddTodoItem");
-            }
-        });
-
 
         //Get push id and fetching data
 
         Intent intent = this.getIntent();
         listId = intent.getStringExtra("TODO_LIST_ID");
+
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtTodoDetails.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(txtTodoDetails, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
+
+
+
         if (listId != null) {
-            fab.show();
 
             mListRef = mRef.child(listId);
 
@@ -92,6 +100,7 @@ public class CreateTodoActivity extends AppCompatActivity {
                     mTodoList = todoList;
 
                     txtTodoTitle.setText(todoList.getTodoListName());
+                    txtTodoDetails.setText(todoList.getTodoListDetails());
                 }
 
                 @Override
@@ -120,7 +129,6 @@ public class CreateTodoActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save_todolist) {
             addTodoList();
-            item.setVisible(false);
         }
 
         if(id == R.id.action_delete_list){
@@ -135,20 +143,43 @@ public class CreateTodoActivity extends AppCompatActivity {
     }
 
     private void removeList() {
-        Firebase listDeleteRef = new Firebase(Constants.FIREBASE_URL_TASKS).child(listId);
-        listDeleteRef.removeValue();
+
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        if (button == DialogInterface.BUTTON_POSITIVE) {
+                            Firebase listDeleteRef = new Firebase(Constants.FIREBASE_URL_TASKS).child(listId);
+                            listDeleteRef.removeValue();
+                            Toast.makeText(CreateTodoActivity.this,"List deleted",Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("List will be deleted")
+                .setPositiveButton("Ok", dialogClickListener)
+                .setNegativeButton("Cancel", dialogClickListener)
+                .show();
+
+
+
     }
 
     private void saveEditedList() {
         String todoListName = txtTodoTitle.getText().toString();
         String todoListOwner = userName ;//(String) mRef.getAuth().getProviderData().get("email");
         String todoDate = DateFormat.getDateTimeInstance().format(new Date());
+        String todoListDetail = txtTodoDetails.getText().toString();
 
         if(todoListName != null){
             Firebase newListRef = new Firebase(Constants.FIREBASE_URL_TASKS).child(listId);
 
-            TodoList newTodoList = new TodoList(todoListName, todoListOwner, todoDate);
+            TodoList newTodoList = new TodoList(todoListName, todoListOwner, todoDate, todoListDetail);
             newListRef.setValue(newTodoList);
+            finish();
+            Toast.makeText(CreateTodoActivity.this,"List saved",Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -158,6 +189,7 @@ public class CreateTodoActivity extends AppCompatActivity {
         String todoListName = txtTodoTitle.getText().toString();
         String todoListOwner = userName ;//(String) mRef.getAuth().getProviderData().get("email");
         String todoDate = DateFormat.getDateTimeInstance().format(new Date());
+        String todoListDetail = txtTodoDetails.getText().toString();
 
         if (!todoListName.equals("")) {
 
@@ -165,11 +197,11 @@ public class CreateTodoActivity extends AppCompatActivity {
 
             final String todoListId = newTodoRef.getKey();
 
-            TodoList newTodoList = new TodoList(todoListName, todoListOwner, todoDate);
+            TodoList newTodoList = new TodoList(todoListName, todoListOwner, todoDate, todoListDetail);
             newTodoRef.setValue(newTodoList);
-            txtTodoTitle.setFocusable(false);
-
-            fab.show();
+            finish();
+            Toast.makeText(CreateTodoActivity.this,"List created",Toast.LENGTH_SHORT).show();
+            finish();
         }
 
     }

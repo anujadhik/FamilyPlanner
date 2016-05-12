@@ -9,13 +9,19 @@ public class TodoList {
     private String todoListName;
     private String listOwner;
     private String timestampCreated;
+    private String todoListDetails;
 
     public TodoList(){}
 
-    public TodoList(String todoListName, String listOwner, String timestampCreated) {
+    public TodoList(String todoListName, String listOwner, String timestampCreated, String todoListDetails) {
         this.todoListName = todoListName;
         this.listOwner = listOwner;
         this.timestampCreated = timestampCreated;
+        this.todoListDetails = todoListDetails;
+    }
+
+    public String getTodoListDetails() {
+        return todoListDetails;
     }
 
     public String getTodoListName() {
